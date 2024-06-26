@@ -23,9 +23,10 @@ fn main() {
     let event_loop = EventLoop::new();
 
     let mut tray_menu = ContextMenu::new();
-    tray_menu.add_item(MenuItemAttributes::new("Show").with_id(MenuId::new("0")));
-    tray_menu.add_item(MenuItemAttributes::new("Exit").with_id(MenuId::new("1")));
-
+    let show_id = MenuId::new("0");
+    let exit_id = MenuId::new("1");
+    tray_menu.add_item(MenuItemAttributes::new("Show").with_id(show_id));
+    tray_menu.add_item(MenuItemAttributes::new("Exit").with_id(exit_id));
 
     let tray_icon_path = concat!(env!("CARGO_MANIFEST_DIR"), "/assets/icon.png");
     let tray_icon = load_icon(tray_icon_path);
@@ -43,15 +44,12 @@ fn main() {
                 origin: _,
                 ..
             } => {
-                match menu_id {
-                    MenuId(0) => {
-                        println!("Show clicked");
-                    }
-                    MenuId(1) => {
-                        println!("Exit clicked");
-                        *control_flow = ControlFlow::Exit;
-                    }
-                    _ => (),
+                if menu_id == show_id {
+                    println!("Show clicked");
+                    // Handle Show action
+                } else if menu_id == exit_id {
+                    println!("Exit clicked");
+                    *control_flow = ControlFlow::Exit;
                 }
             }
             _ => (),
